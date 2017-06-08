@@ -3,7 +3,15 @@
 require 'net/http'
 require 'json'
 
-sheetKey = "1sOiiSa2FkMQjkgDVUhnQW7pyAG1f3d9EMPzrQoox2oQ"
+if ARGV.empty?
+	puts "usage: ./run.rb key"
+	puts "To get the key, open the google sheet and click File > Publish to the Web..."
+	puts "key is in the url they give you, https://docs.google.com/spreadsheets/d/[KEY]/pubhtml"
+	exit
+end
+
+#sheetKey = "1sOiiSa2FkMQjkgDVUhnQW7pyAG1f3d9EMPzrQoox2oQ"
+sheetKey = ARGV[0]
 url = "https://spreadsheets.google.com/feeds/list/" + sheetKey + "/od6/public/values?alt=json"
 
 def getTokens(url)
@@ -29,11 +37,11 @@ def composeJSON(tokens)
 		i += 1
 	end
 
-	return data.to_json
+	return data
 end
 
 tokens = getTokens(url)
 json = composeJSON(tokens)
 # binding.pry
 
-puts json
+puts JSON.pretty_generate(json)
